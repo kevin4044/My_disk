@@ -1,0 +1,160 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+#   <adn.adin@gmail.com>, 2011.
+# Jan-Christoph Borchardt <JanCBorchardt@fsfe.org>, 2011.
+# Stefan Ilivanov <ilivanov@gmail.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: ownCloud\n"
+"Report-Msgid-Bugs-To: http://owncloud.shapado.com/\n"
+"POT-Creation-Date: 2011-09-23 18:17+0200\n"
+"PO-Revision-Date: 2011-09-06 19:20+0000\n"
+"Last-Translator: adin <adn.adin@gmail.com>\n"
+"Language-Team: Bulgarian (Bulgaria) (http://www.transifex.net/projects/p/owncloud/team/bg_BG/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: bg_BG\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: strings.php:5
+msgid "Personal"
+msgstr "Лични"
+
+#: strings.php:6
+msgid "Users"
+msgstr "Потребители"
+
+#: strings.php:7
+msgid "Apps"
+msgstr "Програми"
+
+#: strings.php:8
+msgid "Admin"
+msgstr "Админ"
+
+#: strings.php:9
+msgid "Help"
+msgstr "Помощ"
+
+#: templates/404.php:12
+msgid "Cloud not found"
+msgstr "облакът не намерен"
+
+#: templates/installation.php:20
+msgid "Create an <strong>admin account</strong>"
+msgstr "Създаване на <strong>админ профил</strong>"
+
+#: templates/installation.php:21
+msgid "Username"
+msgstr "Потребител"
+
+#: templates/installation.php:22
+msgid "Password"
+msgstr "Парола"
+
+#: templates/installation.php:27
+msgid "Configure the database"
+msgstr "Конфигуриране на базата"
+
+#: templates/installation.php:32 templates/installation.php:43
+#: templates/installation.php:53
+msgid "will be used"
+msgstr "ще се ползва"
+
+#: templates/installation.php:64
+msgid "Database user"
+msgstr "Потребител за базата"
+
+#: templates/installation.php:65
+msgid "Database password"
+msgstr "Парола за базата"
+
+#: templates/installation.php:66
+msgid "Database name"
+msgstr "Име на базата"
+
+#: templates/installation.php:72
+msgid "Advanced"
+msgstr "Разширено"
+
+#: templates/installation.php:75
+msgid "Database host"
+msgstr "Хост за базата"
+
+#: templates/installation.php:76
+msgid "Data folder"
+msgstr "Директория за данни"
+
+#: templates/installation.php:79
+msgid "Finish setup"
+msgstr "Завършване на настройките"
+
+#: templates/layout.guest.php:35
+msgid "gives you freedom and control over your own data"
+msgstr "дава Ви свобода и контрол на Вашите лични данни"
+
+#: templates/layout.user.php:34
+msgid "Log out"
+msgstr "Изход"
+
+#: templates/layout.user.php:46 templates/layout.user.php:47
+msgid "Settings"
+msgstr "Настройки"
+
+#: templates/login.php:4
+msgid "Lost your password?"
+msgstr "Забравена парола?"
+
+#: templates/login.php:9 templates/login.php:13
+msgid "remember"
+msgstr "запомни"
+
+#: templates/logout.php:1
+msgid "You are logged out."
+msgstr "Вие излязохте."
+
+#: templates/lostpassword.php:3
+msgid "You will receive a link to reset your password via Email."
+msgstr "Ще получите връзка за да нулирате паролата си."
+
+#: templates/lostpassword.php:5
+msgid "Requested"
+msgstr "Заявено"
+
+#: templates/lostpassword.php:8
+msgid "Login failed!"
+msgstr "Входа пропадна!"
+
+#: templates/lostpassword.php:10
+msgid "Username or Email"
+msgstr "Потребителско име или Email"
+
+#: templates/lostpassword.php:11
+msgid "Request reset"
+msgstr "Заявка за нулиране"
+
+#: templates/part.pagenavi.php:3
+msgid "prev"
+msgstr "пред."
+
+#: templates/part.pagenavi.php:20
+msgid "next"
+msgstr "следващо"
+
+#: templates/resetpassword.php:4
+msgid "Your password was reset"
+msgstr "Вашата парола е нулирана"
+
+#: templates/resetpassword.php:6
+msgid "New password"
+msgstr "Нова парола"
+
+#: templates/resetpassword.php:7
+msgid "Reset password"
+msgstr "Нулиране на парола"
+
+
