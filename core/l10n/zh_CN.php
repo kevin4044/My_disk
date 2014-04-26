@@ -8,6 +8,7 @@
 "Create an <strong>admin account</strong>" => "创建<strong>管理员账号</strong>",
 "Username" => "用户名",
 "Password" => "密码",
+"Log in" => "登录",
 "Configure the database" => "配置数据库",
 "will be used" => "将被使用",
 "Database user" => "数据库用户",
@@ -32,5 +33,6 @@
 "next" => "下一页",
 "Your password was reset" => "您的密码已重置",
 "New password" => "新密码",
-"Reset password" => "重置密码"
+"Reset password" => "重置密码",
+"Register" => "注册"
 );

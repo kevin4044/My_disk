@@ -100,6 +100,10 @@ else {
 			$error = true;
 		}
 	}
+    elseif(isset($_GET["register"])) {
+        OC_Template::printGuestPage('', 'register', array('error' => $error, 'redirect' => isset($_REQUEST['redirect_url'])?$_REQUEST['redirect_url']:'' ));
+    } else {
+        OC_Template::printGuestPage('', 'login', array('error' => $error, 'redirect' => isset($_REQUEST['redirect_url'])?$_REQUEST['redirect_url']:'' ));
+    }
 
-	OC_Template::printGuestPage('', 'login', array('error' => $error, 'redirect' => isset($_REQUEST['redirect_url'])?$_REQUEST['redirect_url']:'' ));
 }
