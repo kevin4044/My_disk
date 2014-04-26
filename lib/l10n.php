@@ -32,7 +32,7 @@ class OC_L10N{
 	/**
 	 * The best language
 	 */
-	protected static $language = '';
+	protected static $language = 'zh_CN';
 	
 	/**
 	 * Translations
