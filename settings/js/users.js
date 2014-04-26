@@ -5,6 +5,24 @@
  */
 
 $(document).ready(function(){
+    function appendToList(username, groups) {
+        var tr = $('#content table tbody tr').first().clone();
+        tr.attr('data-uid', username);
+        tr.find('td.name').text(username);
+        var select = $('<select multiple="multiple" data-placehoder="Groups" title="Groups">');
+        select.data('username', username);
+        select.data('userGroups', groups.join(', '));
+        tr.find('td.groups').empty();
+        $.each($('#content table').data('groups').split(', '), function (i, group) {
+            select.append($('<option value="' + group + '">' + group + '</option>'));
+        });
+        tr.find('td.groups').append(select);
+        if (tr.find('td.remove img').length == 0) {
+            tr.find('td.remove').append($('<img alt="Delete" title="' + t('settings', 'Delete') + '" class="svg action" src="' + OC.imagePath('core', 'actions/delete') + '"/>'));
+        }
+        applyMultiplySelect(select);
+        $('#content table tbody').last().after(tr);
+    }
 	function applyMultiplySelect(element){
 		var checked=[];
 		var user=element.data('username');
@@ -134,27 +152,17 @@ $(document).ready(function(){
 			{
 				username:username,
 				password:password,
-				groups:groups,
+				groups:groups
 			},
 			function(result){
-				
-			}
+				console.log(result);
+                if (result.status == "error") {
+                    alert(result.data['message']);
+                } else {
+                    appendToList(username, groups);
+                }
+			},
+            'json'
 		);
-		var tr=$('#content table tbody tr').first().clone();
-		tr.attr('data-uid',username);
-		tr.find('td.name').text(username);
-		var select=$('<select multiple="multiple" data-placehoder="Groups" title="Groups">');
-		select.data('username',username);
-		select.data('userGroups',groups.join(', '));
-		tr.find('td.groups').empty();
-		$.each($('#content table').data('groups').split(', '),function(i,group){
-			select.append($('<option value="'+group+'">'+group+'</option>'));
-		});
-		tr.find('td.groups').append(select);
-		if(tr.find('td.remove img').length==0){
-			tr.find('td.remove').append($('<img alt="Delete" title="'+t('settings','Delete')+'" class="svg action" src="'+OC.imagePath('core','actions/delete')+'"/>'));
-		}
-		applyMultiplySelect(select);
-		$('#content table tbody').last().after(tr);
-	});
+    });
 });
