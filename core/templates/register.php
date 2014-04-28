@@ -6,7 +6,7 @@
  * Time: 下午4:25
  */
 ?>
-<form action="index.php" method="post">
+<form id="register" method="post">
     <fieldset>
         <?php if (!empty($_['redirect'])) {
             echo '<input type="hidden" name="redirect_url" value="' . $_['redirect'] . '" />';

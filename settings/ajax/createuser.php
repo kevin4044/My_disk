@@ -4,10 +4,11 @@
 require_once('../../lib/base.php');
 
 // Check if we are a user
-if( !OC_User::isLoggedIn() || !OC_Group::inGroup( OC_User::getUser(), 'admin' )){
+// Delete by Kevin Cause we need to register it
+/*if( !OC_User::isLoggedIn() || !OC_Group::inGroup( OC_User::getUser(), 'admin' )){
 	OC_JSON::error(array("data" => array( "message" => "Authentication error" )));
 	exit();
-}
+}*/
 
 $groups = array();
 if( isset( $_POST["groups"] )){

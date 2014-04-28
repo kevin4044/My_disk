@@ -137,7 +137,7 @@ $(document).ready(function(){
 	$('td.quota').live('click',function(event){
 		$(this).children('img').click();
 	});
-	
+
 	$('#newuser').submit(function(event){
 		event.preventDefault();
 		var username=$('#newusername').val();

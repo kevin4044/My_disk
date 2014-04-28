@@ -101,6 +101,7 @@ else {
 		}
 	}
     elseif(isset($_GET["register"])) {
+        OC_Util::addScript('settings','register');
         OC_Template::printGuestPage('', 'register', array('error' => $error, 'redirect' => isset($_REQUEST['redirect_url'])?$_REQUEST['redirect_url']:'' ));
     } else {
         OC_Template::printGuestPage('', 'login', array('error' => $error, 'redirect' => isset($_REQUEST['redirect_url'])?$_REQUEST['redirect_url']:'' ));
