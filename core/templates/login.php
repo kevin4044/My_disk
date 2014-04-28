@@ -4,7 +4,7 @@
 		<?php if($_['error']): ?>
 			<a href="./core/lostpassword/"><?php echo $l->t('Lost your password?'); ?></a>
 		<?php endif; ?>
-        <a href="/index.php?register=true" title="<?php echo $l->t('Register') ?>"><?php echo $l->t('Register') ?></a>
+        <a href="/index.php?register=true" title="<?php echo $l->t('No account?Register now!') ?>"><?php echo $l->t('No account?Register now!') ?></a>
 		<p class="infield">
 			<label for="user" class="infield"><?php echo $l->t( 'Username' ); ?></label>
 			<input type="text" name="user" id="user" value="<?php echo !empty($_POST['user'])?$_POST['user'].'"':'" autofocus'; ?> autocomplete="off" required />

@@ -34,5 +34,5 @@
 "Your password was reset" => "您的密码已重置",
 "New password" => "新密码",
 "Reset password" => "重置密码",
-"Register" => "注册"
+"No account?Register now!" => "还未注册？现在注册!"
 );
