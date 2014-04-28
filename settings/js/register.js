@@ -27,7 +27,8 @@ $(document).ready(function(){
                 if (result.status == "error") {
                     alert(result.data['message']);
                 } else {
-                    alert('success');
+                    alert('注册成功');
+                    window.location.href='/index.php';
                 }
             },
             'json'
