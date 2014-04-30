@@ -2,7 +2,7 @@
 	<fieldset>
 		<?php if(!empty($_['redirect'])) { echo '<input type="hidden" name="redirect_url" value="'.$_['redirect'].'" />'; } ?>
 		<?php if($_['error']): ?>
-			<a href="./core/lostpassword/"><?php echo $l->t('Lost your password?'); ?></a>
+			<a href="./core/lostpassword/"><?php echo $l->t('Lost your password?'); ?></a><br/>
 		<?php endif; ?>
         <a href="/index.php?register=true" title="<?php echo $l->t('No account?Register now!') ?>"><?php echo $l->t('No account?Register now!') ?></a>
 		<p class="infield">
