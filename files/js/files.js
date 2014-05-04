@@ -2,7 +2,8 @@ $(document).ready(function() {
     $('#file-table').searcher({
         inputSelector:'#file-searcher'
     })
-    
+    MYsort.data_container = '#fileList';
+
 	if($('tr[data-file]').length==0){
 		$('.file_upload_filename').addClass('highlight');
 	}

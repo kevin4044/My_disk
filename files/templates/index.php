@@ -17,6 +17,9 @@
 			<input class="svg" type="text" name="file_newfolder_name" id="file_newfolder_name" value="" placeholder="<?php echo $l->t('New Folder')?>" />
 		</form>
         <input type="text" class="svg" id="file-searcher" placeholder="<?php echo $l->t("Search"); ?>"/>
+        <button data-selecter=".name" data-order="desc" onclick="MYsort.sort('.name','desc')">name sort</button>
+        <button data-selecter=".filesize" data-order="desc" onclick="MYsort.sort('.filesize','desc')">size sort</button>
+        <button data-selecter=".date" data-order="desc" onclick="MYsort.sort('.date','desc')">date sort</button>
 	</div>
 	<div id="file_action_panel">
 	</div>

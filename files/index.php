@@ -33,6 +33,7 @@ OC_Util::addStyle( "files", "files" );
 OC_Util::addScript( "files", "files" );
 OC_Util::addScript( 'files', 'filelist' );
 OC_Util::addScript( 'files', 'fileactions' );
+OC_Util::addScript( 'files', 'sort' );
 OC_Util::addScript( 'files', 'jquery.searcher');
 if(!isset($_SESSION['timezone'])){
 	OC_Util::addScript( 'files', 'timezone' );
