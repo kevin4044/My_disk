@@ -16,6 +16,7 @@
 		<form id="file_newfolder_form">
 			<input class="svg" type="text" name="file_newfolder_name" id="file_newfolder_name" value="" placeholder="<?php echo $l->t('New Folder')?>" />
 		</form>
+        <input type="text" class="svg" id="file-searcher" placeholder="<?php echo $l->t("Search"); ?>"/>
 	</div>
 	<div id="file_action_panel">
 	</div>
@@ -31,7 +32,7 @@ if (isset($_['files'])) {
 <div id="emptyfolder"><?php echo $l->t('Nothing in here. Upload something!')?></div>
 <?php }}?>
 
-<table>
+<table id="file-table">
 	<thead>
 		<tr>
 			<th id='headerName'>

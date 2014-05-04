@@ -10,5 +10,6 @@
 "Modified" => "修改日期",
 "Delete" => "删除",
 "Upload too large" => "上传文件过大",
+"Search" => "搜索",
 "The files you are trying to upload exceed the maximum size for file uploads on this server." => "您正尝试上传的文件超过了此服务器可以上传的最大大小"
 );

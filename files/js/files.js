@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    $('#file-table').searcher({
+        inputSelector:'#file-searcher'
+    })
+    
 	if($('tr[data-file]').length==0){
 		$('.file_upload_filename').addClass('highlight');
 	}
