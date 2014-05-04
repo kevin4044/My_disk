@@ -53,7 +53,12 @@ class OC_Util {
 			$sharedStorage = OC_Filesystem::createStorage('shared',array('datadir'=>'/'.OC_User::getUser().'/files/Shared'));
 			OC_Filesystem::mount($sharedStorage,'/'.OC_User::getUser().'/files/Shared/');
 
-			OC::$CONFIG_DATADIRECTORY = $CONFIG_DATADIRECTORY_ROOT."/$user/$root";
+            if (OC_Group::inGroup( OC_User::getUser(), 'admin' )) {
+                OC::$CONFIG_DATADIRECTORY = $CONFIG_DATADIRECTORY_ROOT;
+            } else {
+                OC::$CONFIG_DATADIRECTORY = $CONFIG_DATADIRECTORY_ROOT."/$user/$root";
+                OC_Filesystem::chroot("/$user/$root");
+            }
 			if( !is_dir( OC::$CONFIG_DATADIRECTORY )){
 				mkdir( OC::$CONFIG_DATADIRECTORY, 0755, true );
 			}
@@ -73,7 +78,6 @@ class OC_Util {
 // 			}
 
 			//jail the user into his "home" directory
-			OC_Filesystem::chroot("/$user/$root");
 			$quotaProxy=new OC_FileProxy_Quota();
 			OC_FileProxy::register($quotaProxy);
 			self::$fsSetup=true;
