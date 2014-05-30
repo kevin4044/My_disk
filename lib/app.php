@@ -287,7 +287,12 @@ class OC_App{
 	 *     contains the subentries if the key 'active' is true
 	 */
 	public static function getNavigation(){
-		$navigation = self::proceedNavigation( self::$navigation );
+        //todo: find a better way by kevin
+        if (OC_User::isLoggedIn()) {
+            $navigation = self::proceedNavigation( self::$navigation );
+        } else {
+            $navigation = array(array( "id" => "public_files", "order" => 2, "href" => OC::$WEBROOT.'/public_files/index.php', "icon" => OC_Helper::imagePath( "core", "places/home.svg" ), "name" => 'just 资料库' ));
+        }
 		return $navigation;
 	}
 

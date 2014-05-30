@@ -41,6 +41,21 @@ class OC_User {
 	// Backends available (except database)
 	private static $_backends = array();
 
+    /**
+     * @brief get_user_without_anythint
+     * @param
+     * @returns if logged in return $username
+     * @returns else return NULL
+     * Makes a list of backends that can be used by other modules
+     */
+    public static function public_get_user() {
+        $user = null;
+        if (self::isLoggedIn()) {
+            $user = self::getUser();
+        }
+        return $user;
+    }
+
 	/**
 	 * @brief registers backend
 	 * @param $name name of the backend

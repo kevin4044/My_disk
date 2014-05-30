@@ -50,10 +50,17 @@ class OC{
 	 * the folder that stores that data files for the filesystem of the user (e.g. /srv/http/owncloud/data/myusername/files)
 	 */
 	public static $CONFIG_DATADIRECTORY = '';
+
 	/**
 	 * the folder that stores the data for the root filesystem (e.g. /srv/http/owncloud/data)
 	 */
 	public static $CONFIG_DATADIRECTORY_ROOT = '';
+
+    /**
+     * the folder that stores the public data
+     * @author kevin
+     */
+    public static $CONFIG_PUBLIC_DATA_DIR = '';
 
 	/**
 	 * SPL autoload

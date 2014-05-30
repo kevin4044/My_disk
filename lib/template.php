@@ -233,7 +233,7 @@ class OC_Template{
 				}
 
 				// Add navigation entry
-				$page->assign( "navigation", OC_App::getNavigation());
+                $page->assign( "navigation", OC_App::getNavigation());
 				$page->assign( "settingsnavigation", OC_App::getSettingsNavigation());
 			}else{
 				$page = new OC_Template( "core", "layout.guest" );

@@ -1,5 +1,6 @@
 <?php
 
+define('PUBLIC_DIR', '/public_dir');
 /**
  * Class for utility functions
  *
@@ -30,6 +31,8 @@ class OC_Util {
   			}
 		}
 
+        //by kevin: nomatter user logged in or not ,just change the dir
+        OC::$CONFIG_PUBLIC_DATA_DIR = $CONFIG_DATADIRECTORY_ROOT .PUBLIC_DIR;
 		// If we are not forced to load a specific user we load the one that is logged in
 		if( $user == "" && OC_User::isLoggedIn()){
 			$user = OC_User::getUser();
@@ -50,7 +53,8 @@ class OC_Util {
 			OC_Filesystem::mount($rootStorage,'/');
 
 			// TODO add this storage provider in a proper way
-			$sharedStorage = OC_Filesystem::createStorage('shared',array('datadir'=>'/'.OC_User::getUser().'/files/Shared'));
+			$sharedStorage =
+                OC_Filesystem::createStorage('shared',array('datadir'=>'/'.OC_User::getUser().'/files/Shared'));
 			OC_Filesystem::mount($sharedStorage,'/'.OC_User::getUser().'/files/Shared/');
 
             if (OC_Group::inGroup( OC_User::getUser(), 'admin' )) {
