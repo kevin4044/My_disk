@@ -27,8 +27,7 @@ $dir = isset( $_GET['dir'] ) ? $_GET['dir'] : '';
 OC_Filesystem::chroot(PUBLIC_DIR);
 
 if (!file_exists(OC::$CONFIG_PUBLIC_DATA_DIR)) {
-    //$ret = @mkdir(OC::$CONFIG_PUBLIC_DATA_DIR);
-    $ret = false;
+    $ret = @mkdir(OC::$CONFIG_PUBLIC_DATA_DIR);
     if ($ret === false) {
         $erro_tmpl = new OC_Template( '', 'error', 'guest' );
         $erro_tmpl->assign('errors',array(1=>array('error'=>"Can't create data directory (".$CONFIG_DATADIRECTORY_ROOT.")",'hint'=>"You can usually fix this by setting the owner of '".OC::$SERVERROOT."' to the user that the web server uses (".OC_Util::checkWebserverUser().")")));
