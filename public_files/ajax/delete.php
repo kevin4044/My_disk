@@ -16,10 +16,15 @@ $filesWithError = '';
 $success = true;
 //Now delete
 foreach($files as $file) {
-    if( !OC_Files::delete( $dir, $file )){
+    error_log($dir.'/'.$file);
+    $file_info = OC_Public_Model::is_deletable($file, $dir.'/', $user);
+    if( $file_info === false
+        /*|| !OC_Files::delete( $dir, $file )*/){
 		$filesWithError .= $file . "\n";
 		$success = false;
-	}
+	} else {
+        OC_Public_Model::delete_handler($file_info, $user);
+    }
 }
 
 if($success) {

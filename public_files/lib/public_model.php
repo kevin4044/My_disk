@@ -28,6 +28,15 @@ class OC_Public_Model {
             ." WHERE `id`=?");
         $result = $query->execute(array($id));
     }
+    static public function get_fileinfo_by_name($file_name, $parent_dir)
+    {
+        $query = OC_DB::prepare("SELECT * FROM `"
+            .self::$db_name
+            ."` WHERE `is_dir`=0 and `file_name`=? and `path`=? limit 1");
+        $result = $query->execute(array($file_name, $parent_dir));
+
+        return $result->fetchRow();
+    }
 
     static public function get_dirinfo_by_name($name)
     {
@@ -38,7 +47,7 @@ class OC_Public_Model {
 
         return $result->fetchRow();
     }
-    static public function get_dirinfo_by_id($id)
+    static public function get_info_by_id($id)
     {
         $query = OC_DB::prepare("SELECT * FROM `"
             .self::$db_name
@@ -65,6 +74,13 @@ class OC_Public_Model {
         ));
         return OC_DB::insertid();
     }
+    static private function delete_row($id)
+    {
+        $query = OC_DB::prepare("DELETE FROM `"
+            .self::$db_name
+            ."` where id=?");
+        $query->execute(array($id));
+    }
 
     static public function get_parent_dir($dir)
     {
@@ -90,7 +106,7 @@ class OC_Public_Model {
         if ($parent_info['id'] == PB_ROOT_ID) {
             return;
         } else {
-            $grand_parent_info = self::get_dirinfo_by_id($parent_info['parent_id']);
+            $grand_parent_info = self::get_info_by_id($parent_info['parent_id']);
             self::check_parent_reference($grand_parent_info, $user);
         }
     }
@@ -151,11 +167,58 @@ class OC_Public_Model {
         return self::add_row($dir_info);
     }
 
+    /**
+     * @breif is this file/dir deletable
+     * @param string $name
+     * @param string $parent_dir  formate like '/aaa/'
+     * @param string $current_user
+     * @return bool/array
+     */
+    static public function is_deletable($name, $parent_dir, $current_user)
+    {
+        $full_name = $parent_dir.$name;
+        if (OC_Filesystem::is_file($full_name)) {
+            $info = self::get_fileinfo_by_name($name,$parent_dir);
+        } else if (OC_Filesystem::is_dir($full_name)) {
+            $info = self::get_dirinfo_by_name($full_name);
+        } else {
+            return false;
+        }
+
+        if ($info['reference_count'] == 0 && $info['uid'] == $current_user) {
+            return $info;
+        } else {
+            return false;
+        }
+    }
+
+    static public function cut_up_parent_reference($file_info, $user)
+    {
+        $parent_id = $file_info['parent_id'];
+        if ($parent_id == 0) {
+            return;
+        }
+
+        $parent_info = self::get_info_by_id($parent_id);
+
+        if ($parent_info['uid'] != $user) {
+            self::reduce_dir_reference($parent_id);
+        }
+
+        self::cut_up_parent_reference($parent_info, $user);
+    }
+
+    static public function delete_handler($file_info, $user)
+    {
+        self::cut_up_parent_reference($file_info, $user);
+        self::delete_row($file_info['id']);
+    }
 
 
     static public function test()
     {
 /*        echo self::get_parent_dir('/test/aaa/css');
         exit;*/
+        self::delete_row(3);
     }
 }
