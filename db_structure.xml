@@ -517,11 +517,10 @@
                 <length>64</length>
             </field>
             <field>
-                <name>is_editable</name>
+                <name>reference_count</name>
                 <type>integer</type>
                 <default>true</default>
                 <notnull>true</notnull>
-                <unsigned>true</unsigned>
                 <length>1</length>
             </field>
             <field>

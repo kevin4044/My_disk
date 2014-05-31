@@ -3,6 +3,7 @@
 // Init owncloud
 require_once('../../lib/base.php');
 
+$l=new OC_L10N('files');
 // Firefox and Konqueror tries to download application/json for me.  --Arthur
 OC_JSON::setContentTypeHeader('text/plain');
 
@@ -66,4 +67,5 @@ function formate_file_info($target, $file_name, $dir)
     $current_file = array('name'=>$file_name, 'directory'=>$dir, 'size'=>OC_Filesystem::filesize($target), 'date'=>date('Y-m-d H:i:s'), 'type'=>'file');
     return $current_file;
 }
+
 ?>
