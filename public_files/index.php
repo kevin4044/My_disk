@@ -21,6 +21,8 @@ if(!isset($_SESSION['timezone'])){
 OC_App::setActiveNavigationEntry( "public_files" );
 // Load the files
 $dir = isset( $_GET['dir'] ) ? $_GET['dir'] : '';
+
+
 //by kevin
 OC_Filesystem::chroot(PUBLIC_DIR);
 

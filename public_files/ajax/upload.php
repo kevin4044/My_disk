@@ -49,6 +49,8 @@ if(strpos($dir,'..') === false){
 		$target=stripslashes($dir) . $files['name'][$i];
 		if(OC_Filesystem::fromUploadedFile($files['tmp_name'][$i],$target)){
 			$result[]=array( "status" => "success", 'mime'=>OC_Filesystem::getMimeType($target),'size'=>OC_Filesystem::filesize($target),'name'=>$files['name'][$i]);
+            $file_info = formate_file_info($target, $files['name'][$i], $dir);
+            OC_Public_Model::upload_file_handler($file_info, $user);
 		}
 	}
 	OC_JSON::encodedPrint($result);
@@ -59,4 +61,9 @@ if(strpos($dir,'..') === false){
 
 OC_JSON::error(array('data' => array('error' => $error, "file" => $fileName)));
 
+function formate_file_info($target, $file_name, $dir)
+{
+    $current_file = array('name'=>$file_name, 'directory'=>$dir, 'size'=>OC_Filesystem::filesize($target), 'date'=>date('Y-m-d H:i:s'), 'type'=>'file');
+    return $current_file;
+}
 ?>
