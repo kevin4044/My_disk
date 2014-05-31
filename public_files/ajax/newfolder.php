@@ -6,6 +6,7 @@ require_once('../../lib/base.php');
 $user = OC_User::public_get_user();
 OC_Filesystem::chroot(PUBLIC_DIR);
 
+OC_JSON::checkLoggedIn();
 // Get the params
 $dir = isset( $_GET['dir'] ) ? $_GET['dir'] : '';
 $foldername = isset( $_GET['foldername'] ) ? $_GET['foldername'] : '';

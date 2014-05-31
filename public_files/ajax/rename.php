@@ -3,6 +3,7 @@
 // Init owncloud
 require_once('../../lib/base.php');
 
+OC_JSON::checkLoggedIn();
 $user = OC_User::public_get_user();
 OC_Filesystem::chroot(PUBLIC_DIR);
 

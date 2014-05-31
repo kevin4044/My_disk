@@ -6,8 +6,10 @@ require_once('../../lib/base.php');
 $l=new OC_L10N('files');
 // Firefox and Konqueror tries to download application/json for me.  --Arthur
 OC_JSON::setContentTypeHeader('text/plain');
+OC_JSON::checkLoggedIn();
 
 $user = OC_User::public_get_user();
+
 
 OC_Filesystem::chroot(PUBLIC_DIR);
 if (!isset($_FILES['files'])) {

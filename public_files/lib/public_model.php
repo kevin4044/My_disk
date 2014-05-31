@@ -96,13 +96,13 @@ class OC_Public_Model {
         }
     }
 
-    static public function upload_file_handler ($file,$user_name)
+    static public function upload_file_handler ($file_info,$user_name)
     {
         if (!$user_name) {
             error_log('NULL user try to upload file');
             return false;
         }
-        $parent_dir = self::get_parent_dir($file['directory']);
+        $parent_dir = self::get_parent_dir($file_info['directory']);
 
         if ($parent_dir === false) {
             return false;
@@ -112,12 +112,13 @@ class OC_Public_Model {
         self::check_parent_reference($parent_dir_info,$user_name);
 
         $parent_dir_id = $parent_dir_info['id'];
-        $file['user_name'] = $user_name;
-        $file['parent_id'] = $parent_dir_id;
-        $file['reference_count'] = 0;//初始状态,引用计数为0
+        $file_info['user_name'] = $user_name;
+        $file_info['parent_id'] = $parent_dir_id;
+        $file_info['reference_count'] = 0;//初始状态,引用计数为0
 
-        return self::add_row($file);
+        return self::add_row($file_info);
     }
+
 
 
 
