@@ -50,10 +50,11 @@ if(strpos($dir,'..') === false){
 	$fileCount=count($files['name']);
 	for($i=0;$i<$fileCount;$i++){
 		$target=stripslashes($dir) . $files['name'][$i];
-		if(OC_Filesystem::fromUploadedFile($files['tmp_name'][$i],$target)){
+        $file_info = formate_file_info($target, $files['name'][$i], $dir);
+		if(OC_Filesystem::fromUploadedFile($files['tmp_name'][$i],$target)
+            && OC_Public_Model::upload_file_handler($file_info, $user)
+        ){
 			$result[]=array( "status" => "success", 'mime'=>OC_Filesystem::getMimeType($target),'size'=>OC_Filesystem::filesize($target),'name'=>$files['name'][$i]);
-            $file_info = formate_file_info($target, $files['name'][$i], $dir);
-            OC_Public_Model::upload_file_handler($file_info, $user);
 		}
 	}
 	OC_JSON::encodedPrint($result);

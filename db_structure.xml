@@ -524,14 +524,6 @@
                 <length>1</length>
             </field>
             <field>
-                <name>size</name>
-                <type>integer</type>
-                <default></default>
-                <notnull>true</notnull>
-                <unsigned>true</unsigned>
-                <length>128</length>
-            </field>
-            <field>
                 <name>mtime</name>
                 <type>datetime</type>
                 <notnull>true</notnull>

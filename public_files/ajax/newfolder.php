@@ -3,10 +3,10 @@
 // Init owncloud
 require_once('../../lib/base.php');
 
-$user = OC_User::public_get_user();
-OC_Filesystem::chroot(PUBLIC_DIR);
-
 OC_JSON::checkLoggedIn();
+
+OC_Filesystem::chroot(PUBLIC_DIR);
+$user = OC_User::public_get_user();
 // Get the params
 $dir = isset( $_GET['dir'] ) ? $_GET['dir'] : '';
 $foldername = isset( $_GET['foldername'] ) ? $_GET['foldername'] : '';
@@ -16,7 +16,9 @@ if($foldername == '') {
 	exit();
 }
 if(defined("DEBUG") && DEBUG) {error_log('try to create ' . $foldername . ' in ' . $dir);}
-if(OC_Files::newFile($dir, $foldername, 'dir')) {
+if(OC_Files::newFile($dir, $foldername, 'dir')
+    && OC_Public_Model::newfolder_handler($foldername, $dir.'/', $user)) {
+
 	OC_JSON::success(array("data" => array()));
 	exit();
 }

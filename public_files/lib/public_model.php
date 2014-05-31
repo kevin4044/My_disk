@@ -52,14 +52,13 @@ class OC_Public_Model {
 
         $query = OC_DB::prepare("INSERT INTO `"
             .self::$db_name
-            ."`(`uid`, `file_name`, `path`, `reference_count`, `size`, `mtime`, `parent_id`, `is_dir`)
-            VALUES (?,?,?,?,?,?,?,?)");
+            ."`(`uid`, `file_name`, `path`, `reference_count`, `mtime`, `parent_id`, `is_dir`)
+            VALUES (?,?,?,?,?,?,?)");
         $query->execute(array(
             $file['user_name'],//uid
             $file['name'],
             $file['directory'],
             $file['reference_count'],//reference_count
-            $file['size'],
             $file['date'],
             $file['parent_id'],
             $file['type'] == 'dir'?PB_ISDIR:PB_NOTDIR
@@ -119,7 +118,38 @@ class OC_Public_Model {
         return self::add_row($file_info);
     }
 
+    /**
+     * @brief 判断用户是否与父目录一致，如一致则增加上级引用计数
+     * 并将本目录增添入数据库
+     * @param string $dir_name formate as 'dddd'
+     * @param string $parent_dir formate as '/aaa/vvv/'
+     * @param string $user
+     * @return true/false
+     */
 
+    static public function newfolder_handler($dir_name,$parent_dir, $user)
+    {
+        if (!$user) {
+            error_log('NULL user try to create_dir');
+            return false;
+        }
+        $parent_dir_info = self::get_dirinfo_by_name($parent_dir);
+        error_log('parent id='.$parent_dir_info['id']);
+
+        self::check_parent_reference($parent_dir_info,$user);
+
+        $dir_info = array(
+            'user_name' =>      $user,//uid
+            'name'=>            null ,
+            'directory' =>      $parent_dir.$dir_name.'/',
+            'reference_count'=> 0,//reference_count
+            'date'=>            date('Y-m-h H:i:s'),
+            'parent_id'=>       $parent_dir_info['id'],
+            'type' =>           'dir'
+        );
+
+        return self::add_row($dir_info);
+    }
 
 
 
