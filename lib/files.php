@@ -187,6 +187,7 @@ class OC_Files {
 			$sourceFile=$sourceDir.'/'.$source;
 			return OC_Filesystem::rename($sourceFile,$targetFile);
 		}
+        return false;
 	}
 
 	/**

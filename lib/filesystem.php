@@ -410,6 +410,7 @@ class OC_Filesystem{
 				return $result;
 			}
 		}
+        return false;
 	}
 	static public function getMimeType($path){
 		return self::basicOperation('getMimeType',$path);
