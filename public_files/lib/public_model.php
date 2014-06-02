@@ -6,14 +6,42 @@
  * Time: 下午10:48
  */
 define('PB_ROOT_ID', 0);
+/**
+ *
+ */
 define('PB_ISDIR', 1);
+/**
+ *
+ */
 define('PB_NOTDIR', 0);
+
+/**
+ * Class OC_Public_Model
+ */
 class OC_Public_Model {
     //todo:maybe change it to another way
+    /**
+     * @var string
+     */
     static private $db_name = "*PREFIX*public_map";
 
 
-    //todo 改为引用计数
+    /**
+     * @param $dir
+     * @return string
+     */
+    static private function dir_formatter($dir)
+    {
+        if (substr($dir, -1) !== '/')
+        {
+            $dir .= '/';
+        }
+        return $dir;
+    }
+
+    /**
+     * @param $id
+     */
     static private  function add_dir_reference($id)
     {
         $query = OC_DB::prepare("UPDATE `"
@@ -21,6 +49,10 @@ class OC_Public_Model {
             ." WHERE `id`=?");
         $result = $query->execute(array($id));
     }
+
+    /**
+     * @param $id
+     */
     static private function reduce_dir_reference($id)
     {
         $query = OC_DB::prepare("UPDATE `"
@@ -28,6 +60,12 @@ class OC_Public_Model {
             ." WHERE `id`=?");
         $result = $query->execute(array($id));
     }
+
+    /**
+     * @param $file_name
+     * @param $parent_dir
+     * @return mixed
+     */
     static public function get_fileinfo_by_name($file_name, $parent_dir)
     {
         $query = OC_DB::prepare("SELECT * FROM `"
@@ -38,15 +76,28 @@ class OC_Public_Model {
         return $result->fetchRow();
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     static public function get_dirinfo_by_name($name)
     {
+        $name = self::dir_formatter($name);
         $query = OC_DB::prepare("SELECT * FROM `"
             .self::$db_name
             ."` WHERE `is_dir`=1 and `file_name` IS NULL and `path`=? limit 1");
         $result = $query->execute(array($name));
+        error_log("SELECT * FROM `"
+            .self::$db_name
+            ."` WHERE `is_dir`=1 and `file_name` IS NULL and `path`='{$name}' limit 1");
 
         return $result->fetchRow();
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
     static public function get_info_by_id($id)
     {
         $query = OC_DB::prepare("SELECT * FROM `"
@@ -56,6 +107,29 @@ class OC_Public_Model {
 
         return $result->fetchRow();
     }
+
+    /**
+     * @param $dir_id
+     * @return array
+     */
+    static public function get_dir_sons($dir_id)
+    {
+        $ret = array();
+        $query = OC_DB::prepare("SELECT * FROM `"
+            .self::$db_name
+            ."` WHERE `parent_id`=?");
+        $result = $query->execute(array($dir_id));
+
+        while( $row = $result->fetchRow()){
+            $ret[] = $row;
+        }
+        return $ret;
+    }
+
+    /**
+     * @param $file
+     * @return id
+     */
     static private function add_row($file)
     {
 
@@ -74,6 +148,10 @@ class OC_Public_Model {
         ));
         return OC_DB::insertid();
     }
+
+    /**
+     * @param $id
+     */
     static private function delete_row($id)
     {
         $query = OC_DB::prepare("DELETE FROM `"
@@ -82,6 +160,10 @@ class OC_Public_Model {
         $query->execute(array($id));
     }
 
+    /**
+     * @param $dir
+     * @return bool|string
+     */
     static public function get_parent_dir($dir)
     {
         if (!is_string($dir)) {
@@ -96,7 +178,20 @@ class OC_Public_Model {
         return false;
     }
 
+    /**
+     * @param $path
+     * @return mixed
+     */
+    static private function get_dir_name_from_path($path)
+    {
+        $path_arry = explode('/',$path);
+        return $path_arry[count($path_arry) - 2];
+    }
     //引用计数+1操作
+    /**
+     * @param $parent_info
+     * @param $user
+     */
     static public function  check_parent_reference($parent_info, $user)
     {
         if ($parent_info['uid'] != $user) {
@@ -111,6 +206,11 @@ class OC_Public_Model {
         }
     }
 
+    /**
+     * @param $file_info
+     * @param $user_name
+     * @return bool|id
+     */
     static public function upload_file_handler ($file_info,$user_name)
     {
         if (!$user_name) {
@@ -118,6 +218,7 @@ class OC_Public_Model {
             return false;
         }
         $parent_dir = self::get_parent_dir($file_info['directory']);
+        error_log(__FUNCTION__ .' parent_dir:'.$parent_dir);
 
         if ($parent_dir === false) {
             return false;
@@ -176,14 +277,7 @@ class OC_Public_Model {
      */
     static public function is_deletable($name, $parent_dir, $current_user)
     {
-        $full_name = $parent_dir.$name;
-        if (OC_Filesystem::is_file($full_name)) {
-            $info = self::get_fileinfo_by_name($name,$parent_dir);
-        } else if (OC_Filesystem::is_dir($full_name)) {
-            $info = self::get_dirinfo_by_name($full_name);
-        } else {
-            return false;
-        }
+        $info = self::get_any_info($name, $parent_dir);
 
         if ($info['reference_count'] == 0 && $info['uid'] == $current_user) {
             return $info;
@@ -192,12 +286,17 @@ class OC_Public_Model {
         }
     }
 
+    /**
+     * @param $file_info
+     * @param $user
+     */
     static public function cut_up_parent_reference($file_info, $user)
     {
-        $parent_id = $file_info['parent_id'];
-        if ($parent_id == 0) {
+        if ($file_info['id'] == 0)
             return;
-        }
+
+        $parent_id = $file_info['parent_id'];
+
 
         $parent_info = self::get_info_by_id($parent_id);
 
@@ -208,17 +307,194 @@ class OC_Public_Model {
         self::cut_up_parent_reference($parent_info, $user);
     }
 
+    /**
+     * @param $file_info
+     * @param $user
+     */
     static public function delete_handler($file_info, $user)
     {
         self::cut_up_parent_reference($file_info, $user);
         self::delete_row($file_info['id']);
     }
 
+    /**
+     * @breif 判断文件是否能被重命名/移动
+     * @param $file
+     * @param $dir
+     * @param $user_name
+     * @return bool|array
+     */
+    static public function is_movable($file, $dir, $user_name)
+    {
+        $dir = self::dir_formatter($dir);
+        error_log($dir.$file);
+        $file_info = self::get_any_info($file, $dir);
 
+        error_log(json_encode($file_info));
+
+        if ($user_name != $file_info['uid']
+            || $file_info['reference_count'] != 0) {
+            return false;
+        }
+
+        return $file_info;
+    }
+
+
+    /**@brief check is dir and update database(file_name)
+     * @param $file_info
+     * @param $new_name
+     * @return bool
+     */
+    static public function file_move_handle($file_info, $new_path, $new_name)
+    {
+        error_log(__FUNCTION__.'('.$new_path.','.$new_name.')');
+
+
+        $new_parent_info = self::get_dirinfo_by_name($new_path);
+        if ($new_parent_info === false) {
+            error_log('ERR:'.__FUNCTION__.'path '.$new_path.' info fetch error');
+        }
+        error_log('parent:'.json_encode($new_parent_info));
+
+        if ($file_info['is_dir'] == PB_ISDIR) {
+            $query = OC_DB::prepare("UPDATE `"
+                .self::$db_name ."` SET path=?, parent_id=?"
+                ." WHERE `id`=?");
+            $result = $query->execute(array(
+                self::dir_formatter($new_path.$new_name)
+                , $new_parent_info['id']
+                , $file_info['id']
+            ));
+        } else {
+            $query = OC_DB::prepare("UPDATE `"
+                .self::$db_name ."` SET path=?, file_name=?, parent_id=?"
+                ." WHERE `id`=?");
+            $result = $query->execute(array($new_path, $new_name, $new_parent_info['id'], $file_info['id']));
+        }
+
+
+        return $new_parent_info;
+    }
+
+    /**
+     * @param $file_info
+     * @param $user
+     */
+    static private function cut_all_reference_recursion($file_info, $user)
+    {
+        self::cut_up_parent_reference($file_info, $user);
+        if ($file_info['is_dir'] == PB_ISDIR) {
+            $son_files = self::get_dir_sons($file_info['id']);
+            foreach ($son_files as $son_file) {
+                self::cut_all_reference_recursion($son_file, $user);
+            }
+        }
+
+    }
+
+    /**
+     * @param $file_info
+     * @param $user
+     * @param null $parent_info
+     */
+    static private function check_all_reference_recursion($file_info, $user, $parent_info=null)
+    {
+        if ($parent_info === null) {
+            $parent_info = self::get_info_by_id($file_info['parent_id']);
+        }
+
+        self::check_parent_reference($parent_info, $user);
+        if ($file_info['is_dir'] == PB_ISDIR) {
+            $son_files = self::get_dir_sons($file_info['id']);
+            foreach ($son_files as $son_file) {
+                self::check_all_reference_recursion($son_file, $user);
+            }
+        }
+    }
+
+
+    /**
+     * @param $file_info
+     * @param $new_path
+     * @param $new_name
+     * @return bool
+     */
+    static public function move_all_file_handler($file_info, $new_path, $new_name)
+    {
+        $new_path = self::dir_formatter($new_path);
+
+        self::file_move_handle($file_info, $new_path, $new_name);
+        if ($file_info['is_dir'] == PB_ISDIR) {
+            error_log(__FUNCTION__.' dir rename');
+
+            $son_files = self::get_dir_sons($file_info['id']);
+
+            error_log(__FUNCTION__.' sons '.json_encode($son_files));
+            foreach ($son_files as $son_file) {
+                if ($son_file['is_dir'] == PB_ISDIR) {
+                    $son_name = self::get_dir_name_from_path($son_file['path']);
+                } else {
+                    $son_name = $son_file['file_name'];
+                }
+                self::move_all_file_handler($son_file, $new_path.$new_name, $son_name);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $file_info
+     * @param $new_path
+     * @param $new_name
+     * @param $user
+     */
+    static public function move_handler($file_info, $new_path, $new_name, $user)
+    {
+        self::cut_all_reference_recursion($file_info,$user);
+
+        self::move_all_file_handler($file_info,$new_path, $new_name);
+
+        self::check_all_reference_recursion($file_info, $user);
+
+    }
+
+
+    /**
+     *
+     */
     static public function test()
     {
 /*        echo self::get_parent_dir('/test/aaa/css');
         exit;*/
-        self::delete_row(3);
+       // self::delete_row(3);
+/*       echo self::dir_formatter('aaa');
+        exit;*/
+/*        echo self::get_dir_name_from_path('/aaa/vvv/ccc/');
+        exit;*/
+    }
+
+    /**
+     * @breif get info no matter it is dir or not
+     * @param $name
+     * @param $parent_dir '/aaa/'
+     * @return mixed
+     */
+    public static function get_any_info($name, $parent_dir)
+    {
+        $full_name = $parent_dir . $name;
+        error_log('full_name:'.$full_name);
+        if (OC_Filesystem::is_file($full_name)) {
+            error_log('full_name:'.$full_name .'is_file');
+            $info = self::get_fileinfo_by_name($name, $parent_dir);
+            return $info;
+        } else if (OC_Filesystem::is_dir($full_name)) {
+            error_log('full_name:'.$full_name .'is_dir');
+            $info = self::get_dirinfo_by_name($full_name);
+            return $info;
+        }
+        error_log(__FUNCTION__ .$full_name.': neither dir or file');
+        return false;
     }
 }
