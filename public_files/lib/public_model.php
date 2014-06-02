@@ -344,6 +344,9 @@ class OC_Public_Model {
      */
     static public function is_movable($file, $dir, $user_name)
     {
+        if (OC_User::is_admin($user_name)) {
+            return true;
+        }
         $dir = self::dir_formatter($dir);
         error_log($dir.$file);
         $file_info = self::get_any_info($file, $dir);
@@ -400,15 +403,16 @@ class OC_Public_Model {
     /**
      * @brief 递归删除本文件以及子文件的引用计数
      * @param $file_info
-     * @param $user
+     * @internal param $user
      */
-    static private function cut_all_reference_recursion($file_info, $user)
+    static private function cut_all_reference_recursion($file_info)
     {
+        $user = $file_info['uid'];
         self::cut_up_parent_reference($file_info, $user);
         if ($file_info['is_dir'] == PB_ISDIR) {
             $son_files = self::get_dir_sons($file_info['id']);
             foreach ($son_files as $son_file) {
-                self::cut_all_reference_recursion($son_file, $user);
+                self::cut_all_reference_recursion($son_file);
             }
         }
 
@@ -417,11 +421,12 @@ class OC_Public_Model {
     /**
      * @brief 递归检查并增加本文件以及子文件的引用计数
      * @param $file_info
-     * @param $user
      * @param null $parent_info
+     * @internal param $user
      */
-    static private function check_all_reference_recursion($file_info, $user, $parent_info=null)
+    static private function check_all_reference_recursion($file_info, $parent_info = null)
     {
+        $user = $file_info['uid'];
         if ($parent_info === null) {
             $parent_info = self::get_info_by_id($file_info['parent_id']);
         }
@@ -430,7 +435,7 @@ class OC_Public_Model {
         if ($file_info['is_dir'] == PB_ISDIR) {
             $son_files = self::get_dir_sons($file_info['id']);
             foreach ($son_files as $son_file) {
-                self::check_all_reference_recursion($son_file, $user);
+                self::check_all_reference_recursion($son_file);
             }
         }
     }
@@ -443,7 +448,7 @@ class OC_Public_Model {
      * @param $new_name
      * @return bool
      */
-    static public function move_all_file_handler($file_info, $new_path, $new_name)
+    static private function move_all_file_handler($file_info, $new_path, $new_name)
     {
         $new_path = self::dir_formatter($new_path);
 
@@ -472,15 +477,15 @@ class OC_Public_Model {
      * @param $file_info
      * @param $new_path
      * @param $new_name
-     * @param $user
+     * @internal param $user
      */
-    static public function move_handler($file_info, $new_path, $new_name, $user)
+    static public function move_handler($file_info, $new_path, $new_name)
     {
-        self::cut_all_reference_recursion($file_info,$user);
+        self::cut_all_reference_recursion($file_info);
 
         self::move_all_file_handler($file_info,$new_path, $new_name);
 
-        self::check_all_reference_recursion($file_info, $user);
+        self::check_all_reference_recursion($file_info);
 
     }
 

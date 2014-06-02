@@ -41,6 +41,15 @@ class OC_User {
 	// Backends available (except database)
 	private static $_backends = array();
 
+    public static function is_admin($user)
+    {
+        if (OC_Group::inGroup($user, 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @brief get_user_without_anythint
      * @param

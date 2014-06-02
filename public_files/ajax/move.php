@@ -23,7 +23,7 @@ if ($file_info === false) {
 }
 
 if(OC_Files::move($dir,$file,$target,$file)){
-    OC_Public_Model::move_all_file_handler($file_info, $target, $file, $user);
+    OC_Public_Model::move_handler($file_info, $target, $file);
 	OC_JSON::success(array("data" => array( "dir" => $dir, "files" => $file )));
 }else{
 	OC_JSON::error(array("data" => array( "message" => "Could move $file" )));

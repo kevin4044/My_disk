@@ -25,7 +25,7 @@ if ($file_info === false) {
 
 // Delete
 if( OC_Files::move( $dir, $file, $dir, $newname )) {
-    OC_Public_Model::move_all_file_handler($file_info, $dir, $newname, $user);
+    OC_Public_Model::move_handler($file_info, $dir, $newname);
 	OC_JSON::success(array("data" => array( "dir" => $dir, "file" => $file, "newname" => $newname )));
 }
 else{
