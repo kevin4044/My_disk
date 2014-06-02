@@ -292,6 +292,9 @@ class OC_Public_Model {
      */
     static public function is_deletable($name, $parent_dir, $current_user)
     {
+        if (OC_User::is_admin($current_user))
+            return true;
+
         $info = self::get_any_info($name, $parent_dir);
 
         if ($info['reference_count'] == 0 && $info['uid'] == $current_user) {
@@ -324,15 +327,32 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 删除文件，或者递归删除本文件夹下的所有文件
+     * @param $file_info array
+     */
+    static private function delete_all($file_info)
+    {
+        error_log(json_encode($file_info));
+        if ($file_info['is_dir'] == PB_ISDIR) {
+            $son_files = self::get_dir_sons($file_info['id']);
+            foreach ($son_files as $son_file) {
+                self::delete_all($son_file);
+            }
+        }
+        self::delete_row($file_info['id']);
+    }
+
+    /**
      * @brief 删除文件的处理函数
      * @param $file_info
-     * @param $user
+     * @internal param $user
      */
-    static public function delete_handler($file_info, $user)
+    static public function save_delete_handler($file_info)
     {
-        self::cut_up_parent_reference($file_info, $user);
-        self::delete_row($file_info['id']);
-        //todo:目录删除
+        self::cut_all_reference_recursion($file_info);
+        error_log(__FUNCTION__.' cut finished');
+
+        self::delete_all($file_info);
     }
 
     /**

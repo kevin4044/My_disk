@@ -23,7 +23,7 @@ foreach($files as $file) {
 		$filesWithError .= $file . "\n";
 		$success = false;
 	} else {
-        OC_Public_Model::delete_handler($file_info, $user);
+        OC_Public_Model::save_delete_handler($file_info);
     }
 }
 
