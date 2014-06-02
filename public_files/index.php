@@ -71,10 +71,10 @@ foreach( explode( "/", $dir ) as $i ){
 $list = new OC_Template( "files", "part.list", "" );
 $list->assign( "files", $files );
 $list->assign( "baseURL", OC_Helper::linkTo("public_files", "index.php?dir="));
-$list->assign( "downloadURL", OC_Helper::linkTo("puyblic_files", "download.php?file="));
+$list->assign( "downloadURL", OC_Helper::linkTo("public_files", "download.php?file="));
 $breadcrumbNav = new OC_Template( "files", "part.breadcrumb", "" );
 $breadcrumbNav->assign( "breadcrumb", $breadcrumb );
-$breadcrumbNav->assign( "baseURL", OC_Helper::linkTo("files", "index.php?dir="));
+$breadcrumbNav->assign( "baseURL", OC_Helper::linkTo("public_files", "index.php?dir="));
 
 $upload_max_filesize = OC_Helper::computerFileSize(ini_get('upload_max_filesize'));
 $post_max_size = OC_Helper::computerFileSize(ini_get('post_max_size'));

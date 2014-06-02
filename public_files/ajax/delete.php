@@ -30,7 +30,7 @@ foreach($files as $file) {
 if($success) {
 	OC_JSON::success(array("data" => array( "dir" => $dir, "files" => $files )));
 } else {
-	OC_JSON::error(array("data" => array( "message" => "Could not delete:\n" . $filesWithError )));
+	OC_JSON::error(array("data" => array( "message" => "无法删除:\n" . $filesWithError )));
 }
 
 ?>
