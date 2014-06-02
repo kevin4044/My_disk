@@ -168,7 +168,20 @@ FileList={
 		procesSelection();
 		FileList.deleteCanceled=false;
 		FileList.deleteFiles=files;
-		$('#notification').text(t('files','undo deletion'));
+		$('#notification').html('<button id="cancel">取消操作</button><button id="confirm">确定删除</button>');
+        $('#notification').find('#confirm').click(function(){
+            FileList.deleteCanceled=false;
+            FileList.finishDelete(null,true);
+        });
+        $('#notification').find('#cancel').click(function(){
+            FileList.deleteCanceled=true;
+            $('#notification').fadeOut();
+            $.each(FileList.deleteFiles,function(index,file){
+                $('tr[data-file="'+file+'"]').show();
+// 			alert(file);
+            });
+            FileList.deleteFiles=null;
+        });
 		$('#notification').fadeIn();
 	},
 	finishDelete:function(ready,sync){
@@ -199,15 +212,6 @@ FileList={
 
 $(document).ready(function(){
 	$('#notification').hide();
-	$('#notification').click(function(){
-		FileList.deleteCanceled=true;
-		$('#notification').fadeOut();
-		$.each(FileList.deleteFiles,function(index,file){
-			$('tr[data-file="'+file+'"]').show();
-// 			alert(file);
-		});
-		FileList.deleteFiles=null;
-	});
 	$(window).bind('beforeunload', function (){
 		FileList.finishDelete(null,true);
 	});
