@@ -332,6 +332,7 @@ class OC_Public_Model {
     {
         self::cut_up_parent_reference($file_info, $user);
         self::delete_row($file_info['id']);
+        //todo:目录删除
     }
 
     /**
