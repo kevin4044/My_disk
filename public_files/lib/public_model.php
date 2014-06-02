@@ -7,7 +7,7 @@
  */
 define('PB_ROOT_ID', 0);
 /**
- *
+ *  是否是路径
  */
 define('PB_ISDIR', 1);
 /**
@@ -16,6 +16,7 @@ define('PB_ISDIR', 1);
 define('PB_NOTDIR', 0);
 
 /**
+ * @brief 公共目录 所用函数集合
  * Class OC_Public_Model
  */
 class OC_Public_Model {
@@ -27,6 +28,7 @@ class OC_Public_Model {
 
 
     /**
+     * @brief 确保路径名的最后有'/'字符串
      * @param $dir
      * @return string
      */
@@ -40,30 +42,33 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 增加对应id 数据库记录的引用计数
      * @param $id
      */
     static private  function add_dir_reference($id)
     {
         $query = OC_DB::prepare("UPDATE `"
             .self::$db_name ."` SET reference_count=reference_count+1"
-            ." WHERE `id`=?");
+            ." WHERE `id`=? and is_dir=1");
         $result = $query->execute(array($id));
     }
 
     /**
+     * @brief 减少1 对应id 的数据库记录的引用计数
      * @param $id
      */
     static private function reduce_dir_reference($id)
     {
         $query = OC_DB::prepare("UPDATE `"
             .self::$db_name ."` SET reference_count=reference_count-1"
-            ." WHERE `id`=?");
+            ." WHERE `id`=? and is_dir=1");
         $result = $query->execute(array($id));
     }
 
     /**
-     * @param $file_name
-     * @param $parent_dir
+     * @brief  获取对应文件夹信息
+     * @param $file_name string 文件名，
+     * @param $parent_dir string 路径
      * @return mixed
      */
     static public function get_fileinfo_by_name($file_name, $parent_dir)
@@ -77,7 +82,8 @@ class OC_Public_Model {
     }
 
     /**
-     * @param $name
+     * @brief  获取对应名称的路径信息
+     * @param $name string 路径名称
      * @return mixed
      */
     static public function get_dirinfo_by_name($name)
@@ -95,6 +101,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief  获取对应id 对应的数据库记录
      * @param $id
      * @return mixed
      */
@@ -109,6 +116,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief  获取对应id路径的直接子文件
      * @param $dir_id
      * @return array
      */
@@ -127,8 +135,9 @@ class OC_Public_Model {
     }
 
     /**
-     * @param $file
-     * @return id
+     * @brief  增加一条记录
+     * @param $file array 文件详情
+     * @return id 数据库记录行号
      */
     static private function add_row($file)
     {
@@ -150,6 +159,7 @@ class OC_Public_Model {
     }
 
     /**
+     *
      * @param $id
      */
     static private function delete_row($id)
@@ -161,7 +171,8 @@ class OC_Public_Model {
     }
 
     /**
-     * @param $dir
+     * @brief  获取该路径的父路径
+     * @param $dir string 当前文件绝对路径
      * @return bool|string
      */
     static public function get_parent_dir($dir)
@@ -179,7 +190,8 @@ class OC_Public_Model {
     }
 
     /**
-     * @param $path
+     * @brief 根据当前路径名获取本文件夹的名称
+     * @param $path string 格式：'/aaa/bbb/'
      * @return mixed
      */
     static private function get_dir_name_from_path($path)
@@ -189,7 +201,8 @@ class OC_Public_Model {
     }
     //引用计数+1操作
     /**
-     * @param $parent_info
+     * @brief 递归检查从本路径开始父路径的引用计数，并进行相应操作
+     * @param $parent_info array 父路径的详细信息
      * @param $user
      */
     static public function  check_parent_reference($parent_info, $user)
@@ -207,7 +220,9 @@ class OC_Public_Model {
     }
 
     /**
-     * @param $file_info
+     * @brief 上传新文件时用于检查父路径们的引用计数并进行相应操作，
+     * 然后在数据库增加本次上传的文件的信息
+     * @param $file_info array 文件基本详情
      * @param $user_name
      * @return bool|id
      */
@@ -287,6 +302,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 递归检测并删减本目录造成的父目录引用计数
      * @param $file_info
      * @param $user
      */
@@ -308,6 +324,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 删除文件的处理函数
      * @param $file_info
      * @param $user
      */
@@ -341,9 +358,11 @@ class OC_Public_Model {
     }
 
 
-    /**@brief check is dir and update database(file_name)
-     * @param $file_info
-     * @param $new_name
+    /**
+     * @brief 文件移动处理
+     * @param $file_info array
+     * @param $new_path string
+     * @param $new_name string
      * @return bool
      */
     static public function file_move_handle($file_info, $new_path, $new_name)
@@ -378,6 +397,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 递归删除本文件以及子文件的引用计数
      * @param $file_info
      * @param $user
      */
@@ -394,6 +414,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 递归检查并增加本文件以及子文件的引用计数
      * @param $file_info
      * @param $user
      * @param null $parent_info
@@ -415,6 +436,7 @@ class OC_Public_Model {
 
 
     /**
+     * @brief 递归移动文件
      * @param $file_info
      * @param $new_path
      * @param $new_name
@@ -445,6 +467,7 @@ class OC_Public_Model {
     }
 
     /**
+     * @brief 移动文件总处理函数
      * @param $file_info
      * @param $new_path
      * @param $new_name
