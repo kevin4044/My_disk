@@ -2,12 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: weroadshowdev
- * Date: 30/5/14
- * Time: 上午8:52
+ * Date: 7/6/14
+ * Time: 上午8:10
  */
 // Init owncloud
 require_once('../lib/base.php');
 
+// Check if we are a user
+OC_Util::checkLoggedIn();
 // Load the files we need
 OC_Util::addStyle( "files", "files" );
 OC_Util::addScript( "files", "files" );
@@ -18,45 +20,14 @@ OC_Util::addScript( 'files', 'jquery.searcher');
 if(!isset($_SESSION['timezone'])){
     OC_Util::addScript( 'files', 'timezone' );
 }
-OC_App::setActiveNavigationEntry( "public_files" );
+OC_App::setActiveNavigationEntry( "my_upload" );
 // Load the files
 $dir = isset( $_GET['dir'] ) ? $_GET['dir'] : '';
 
-//todo delete this after test
-OC_Public_Model::test();
+$user = OC_User::getUser();
 
-//by kevin
-OC_Filesystem::chroot(PUBLIC_DIR);
 
-if (!file_exists(OC::$CONFIG_PUBLIC_DATA_DIR)) {
-    $ret = @mkdir(OC::$CONFIG_PUBLIC_DATA_DIR);
-    if ($ret === false) {
-        $erro_tmpl = new OC_Template( '', 'error', 'guest' );
-        $erro_tmpl->assign('errors',array(1=>array('error'=>"Can't create data directory (".$CONFIG_DATADIRECTORY_ROOT.")",'hint'=>"You can usually fix this by setting the owner of '".OC::$SERVERROOT."' to the user that the web server uses (".OC_Util::checkWebserverUser().")")));
-        $erro_tmpl->printPage();
-        exit;
-    }
-}
-
-$files = array();
-foreach( OC_Files::getdirectorycontent( $dir ) as $i ){
-    $i["date"] = OC_Util::formatDate($i["mtime"] );
-    if($i['type']=='file'){
-        $fileinfo=pathinfo($i['name']);
-        $i['basename']=$fileinfo['filename'];
-        if (!empty($fileinfo['extension'])) {
-            $i['extention']='.' . $fileinfo['extension'];
-        }
-        else {
-            $i['extention']='';
-        }
-    }
-    if($i['directory']=='/'){
-        $i['directory']='';
-    }
-    $files[] = $i;
-}
-
+$files = OC_Public_Model::get_user_uploads($user);
 
 // Make breadcrumb
 $breadcrumb = array();
@@ -69,10 +40,11 @@ foreach( explode( "/", $dir ) as $i ){
 }
 
 // make breadcrumb und filelist markup
-$list = new OC_Template( "files", "part.list", "" );
+$list = new OC_Template( "public_files", "part.list", "" );
 $list->assign( "files", $files );
 $list->assign( "baseURL", OC_Helper::linkTo("public_files", "index.php?dir="));
 $list->assign( "downloadURL", OC_Helper::linkTo("public_files", "download.php?file="));
+$list->assign( "readonly", true );
 $breadcrumbNav = new OC_Template( "files", "part.breadcrumb", "" );
 $breadcrumbNav->assign( "breadcrumb", $breadcrumb );
 $breadcrumbNav->assign( "baseURL", OC_Helper::linkTo("public_files", "index.php?dir="));
@@ -89,4 +61,3 @@ $tmpl->assign( "files", $files );
 $tmpl->assign( 'uploadMaxFilesize', $maxUploadFilesize);
 $tmpl->assign( 'uploadMaxHumanFilesize', OC_Helper::humanFileSize($maxUploadFilesize));
 $tmpl->printPage();
-

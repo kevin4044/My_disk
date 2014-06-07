@@ -41,6 +41,25 @@ class OC_Public_Model {
         return $dir;
     }
 
+    /**获取原始数据
+     * @param $uid string --用户名称
+     * @return array --file list
+     */
+    static private function get_rawdata_by_user($uid)
+    {
+        $file_list = array();
+        $query = OC_DB::prepare("SELECT * FROM `"
+            .self::$db_name
+            ."` WHERE `is_dir`=0 and `uid`=?");
+        $result = $query->execute(array($uid));
+
+        while($row = $result->fetchRow())
+        {
+            $file_list[] = $row;
+        }
+        return $file_list;
+    }
+
     /**
      * @brief 增加对应id 数据库记录的引用计数
      * @param $id
@@ -545,5 +564,18 @@ class OC_Public_Model {
         }
         error_log(__FUNCTION__ .$full_name.': neither dir or file');
         return false;
+    }
+
+    public static function get_user_uploads($user)
+    {
+        OC_Filesystem::chroot(PUBLIC_DIR);
+        $file_list = array();
+        $raw_data = self::get_rawdata_by_user($user);
+        foreach ($raw_data as $row) {
+            $row['size'] = OC_Filesystem::filesize($row['path'].$row['file_name']);
+            $row['extention'] = "";
+            $row['mime'] = OC_Files::getMimeType($row['path'].$row['file_name']);
+        }
+        return $raw_data;
     }
 }
