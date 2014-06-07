@@ -19,7 +19,7 @@ foreach($files as $file) {
     error_log($dir.'/'.$file);
     $file_info = OC_Public_Model::is_deletable($file, $dir.'/', $user);
     if( $file_info === false
-        /*|| !OC_Files::delete( $dir, $file )*/){
+        || !OC_Files::delete( $dir, $file )){
 		$filesWithError .= $file . "\n";
 		$success = false;
 	} else {

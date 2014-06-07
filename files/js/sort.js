@@ -11,7 +11,7 @@ MYsort ={
 
         $each.each(function () {
             var obj = new Object();
-            obj.key = $(this).find(key_class).text();
+            obj.key = $(this).find(key_class).prop('title');
             obj.content = $(this)[0].outerHTML;
 
             //todo:没有考虑属性名重复的情况

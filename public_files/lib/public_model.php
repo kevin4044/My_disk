@@ -569,12 +569,13 @@ class OC_Public_Model {
     public static function get_user_uploads($user)
     {
         OC_Filesystem::chroot(PUBLIC_DIR);
-        $file_list = array();
         $raw_data = self::get_rawdata_by_user($user);
-        foreach ($raw_data as $row) {
+        foreach ($raw_data as &$row) {
             $row['size'] = OC_Filesystem::filesize($row['path'].$row['file_name']);
             $row['extention'] = "";
             $row['mime'] = OC_Files::getMimeType($row['path'].$row['file_name']);
+            $row['date'] = $row['mtime'];
+            $row['mtime'] = explode(' ', $row['mtime'])[0];
         }
         return $raw_data;
     }

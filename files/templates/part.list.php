@@ -8,7 +8,9 @@
 			<tr data-file="<?php echo $file['name'];?>" data-type="<?php echo ($file['type'] == 'dir')?'dir':'file'?>" data-mime="<?php echo $file['mime']?>" data-size='<?php echo $file['size'];?>'>
 				<td class="filename svg" style="background-image:url(<?php if($file['type'] == 'dir') echo mimetype_icon('dir'); else echo mimetype_icon($file['mime']); ?>)">
 					<?php if(!isset($_['readonly']) || !$_['readonly']) { ?><input type="checkbox" /><?php } ?>
-					<a class="name" href="<?php if($file['type'] == 'dir') echo $_['baseURL'].$file['directory'].'/'.$file['name']; else echo $_['downloadURL'].urlencode($file['directory']).'/'.urlencode($file['name']); ?>" title="">
+					<a class="name" href="<?php if($file['type'] == 'dir') echo $_['baseURL'].$file['directory'].'/'.$file['name']; else echo $_['downloadURL'].urlencode($file['directory']).'/'.urlencode($file['name']); ?>"
+                       title="<?php echo $file['type'] == 'dir'? htmlspecialchars($file['name']): htmlspecialchars($file['basename'])?>">
+
 					<span class="nametext">
 						<?php if($file['type'] == 'dir'):?>
 							<?php echo htmlspecialchars($file['name']);?>
@@ -18,7 +20,7 @@
 					</span>
 					</a>
 				</td>
-				<td class="filesize" title="<?php echo human_file_size($file['size']); ?>" style="color:rgb(<?php echo $simple_size_color.','.$simple_size_color.','.$simple_size_color ?>)"><?php echo $file['size']; ?></td>
+				<td class="filesize" title="<?php echo $file['size']; ?>" style="color:rgb(<?php echo $simple_size_color.','.$simple_size_color.','.$simple_size_color ?>)"><?php echo human_file_size($file['size']); ?></td>
 				<td class="date"><span class="modified" title="<?php echo $file['date']; ?>" style="color:rgb(<?php echo $relative_date_color.','.$relative_date_color.','.$relative_date_color ?>)"><?php echo $relative_modified_date; ?></span></td>
 			</tr>
 		<?php endforeach; ?>
